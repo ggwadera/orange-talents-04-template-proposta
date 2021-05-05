@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/propostas
+    username: keycloak
+    password: password
+    initialization-mode: always
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
