@@ -2,6 +2,7 @@ package br.com.zupacademy.ggwadera.proposta.proposta;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Table(
     name = "Proposta",
@@ -11,9 +12,7 @@ import java.math.BigDecimal;
 @Entity
 public class Proposta {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @Id @GeneratedValue private UUID id;
 
   @Column(nullable = false, unique = true)
   private String documento;
@@ -30,6 +29,9 @@ public class Proposta {
   @Column(nullable = false)
   private BigDecimal salario;
 
+  @Enumerated(EnumType.STRING)
+  private EstadoProposta estado;
+
   @Deprecated
   public Proposta() {}
 
@@ -42,7 +44,7 @@ public class Proposta {
     this.salario = salario;
   }
 
-  public Long getId() {
+  public UUID getId() {
     return id;
   }
 
@@ -66,6 +68,10 @@ public class Proposta {
     return salario;
   }
 
+  public void setEstado(EstadoProposta estado) {
+    this.estado = estado;
+  }
+
   @Override
   public String toString() {
     return "Proposta("
@@ -86,6 +92,9 @@ public class Proposta {
         + ", "
         + "salario = "
         + salario
+        + ", "
+        + "estado = "
+        + estado
         + ")";
   }
 }
