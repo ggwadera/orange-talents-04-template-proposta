@@ -3,6 +3,11 @@ package br.com.zupacademy.ggwadera.proposta.proposta;
 import javax.persistence.*;
 import java.math.BigDecimal;
 
+@Table(
+    name = "Proposta",
+    indexes = {
+      @Index(name = "idx_proposta_documento_unq", columnList = "documento", unique = true)
+    })
 @Entity
 public class Proposta {
 
@@ -59,5 +64,28 @@ public class Proposta {
 
   public BigDecimal getSalario() {
     return salario;
+  }
+
+  @Override
+  public String toString() {
+    return "Proposta("
+        + "id = "
+        + id
+        + ", "
+        + "documento = "
+        + documento
+        + ", "
+        + "email = "
+        + email
+        + ", "
+        + "nome = "
+        + nome
+        + ", "
+        + "endereco = "
+        + endereco
+        + ", "
+        + "salario = "
+        + salario
+        + ")";
   }
 }
