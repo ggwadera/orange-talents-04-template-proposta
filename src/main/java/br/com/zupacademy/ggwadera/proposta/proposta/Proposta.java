@@ -14,6 +14,9 @@ public class Proposta {
 
   @Id @GeneratedValue private UUID id;
 
+  @Column(unique = true)
+  private String idCartao;
+
   @Column(nullable = false, unique = true)
   private String documento;
 
@@ -68,8 +71,16 @@ public class Proposta {
     return salario;
   }
 
+  public String getIdCartao() {
+    return idCartao;
+  }
+
   public void setEstado(EstadoProposta estado) {
     this.estado = estado;
+  }
+
+  public void setIdCartao(String idCartao) {
+    this.idCartao = idCartao;
   }
 
   @Override
