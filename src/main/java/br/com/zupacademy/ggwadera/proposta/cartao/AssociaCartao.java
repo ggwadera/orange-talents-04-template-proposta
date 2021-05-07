@@ -32,12 +32,12 @@ public class AssociaCartao {
   public void associarCartao() {
     logger.info("Verificando cartões para propostas");
     List<Proposta> propostasParaSalvar =
-        propostaRepository.findByIdCartaoIsNullAndEstadoIs(EstadoProposta.ELEGIVEL).parallelStream()
+        propostaRepository.findByCartaoIsNullAndEstadoIs(EstadoProposta.ELEGIVEL).parallelStream()
             .peek(
                 proposta -> {
                   try {
                     CartaoResponse cartao = cartaoClient.getCartao(proposta.getId());
-                    proposta.setIdCartao(cartao.getId());
+                    proposta.setCartao(cartao.toModel(proposta));
                     logger.info("Proposta id={} atualizada com cartão", proposta.getId());
                   } catch (FeignException e) {
                     logger.info("Proposta id={} ainda não tem cartão", proposta.getId());
@@ -45,7 +45,7 @@ public class AssociaCartao {
                 })
             .collect(
                 Collectors.filtering(
-                    proposta -> proposta.getIdCartao() != null, Collectors.toList()));
+                    proposta -> proposta.getCartao() != null, Collectors.toList()));
     propostaRepository.saveAll(propostasParaSalvar);
   }
 }

@@ -10,5 +10,5 @@ public interface PropostaRepository extends JpaRepository<Proposta, UUID> {
 
   boolean existsByDocumento(String documento);
 
-  List<Proposta> findByIdCartaoIsNullAndEstadoIs(@NonNull EstadoProposta estado);
+  List<Proposta> findByCartaoIsNullAndEstadoIs(@NonNull EstadoProposta estado);
 }
