@@ -6,14 +6,17 @@ import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/propostas")
@@ -34,6 +37,18 @@ public class PropostaController {
   @InitBinder
   public void init(WebDataBinder binder) {
     binder.addValidators(new DocumentoJaSolicitadoValidator(propostaRepository::existsByDocumento));
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<PropostaResponse> buscaProposta(@PathVariable UUID id) {
+    Proposta proposta =
+        propostaRepository
+            .findById(id)
+            .orElseThrow(
+                () ->
+                    new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Não foi encontrada nenhuma proposta com id=" + id));
+    return ResponseEntity.ok(new PropostaResponse(proposta));
   }
 
   @PostMapping

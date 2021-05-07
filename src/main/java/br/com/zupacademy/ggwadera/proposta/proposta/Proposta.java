@@ -75,6 +75,10 @@ public class Proposta {
     return idCartao;
   }
 
+  public EstadoProposta getEstado() {
+    return estado;
+  }
+
   public void setEstado(EstadoProposta estado) {
     this.estado = estado;
   }
