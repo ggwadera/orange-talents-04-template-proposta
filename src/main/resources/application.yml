@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/propostas
-    username: keycloak
-    password: password
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/propostas}
+    username: ${DB_USER:keycloak}
+    password: ${DB_PW:password}
     initialization-mode: always
   h2:
     console:
@@ -11,10 +11,11 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
 
 servicos:
   analise: ${URL_ANALISE:http://localhost:9999/api}
+  contas: ${URL_CONTAS:http://localhost:8888/api}
