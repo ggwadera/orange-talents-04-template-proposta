@@ -1,5 +1,7 @@
 package br.com.zupacademy.ggwadera.proposta.proposta;
 
+import br.com.zupacademy.ggwadera.proposta.cartao.Cartao;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -13,9 +15,6 @@ import java.util.UUID;
 public class Proposta {
 
   @Id @GeneratedValue private UUID id;
-
-  @Column(unique = true)
-  private String idCartao;
 
   @Column(nullable = false, unique = true)
   private String documento;
@@ -34,6 +33,9 @@ public class Proposta {
 
   @Enumerated(EnumType.STRING)
   private EstadoProposta estado;
+
+  @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+  private Cartao cartao;
 
   @Deprecated
   public Proposta() {}
@@ -71,8 +73,12 @@ public class Proposta {
     return salario;
   }
 
-  public String getIdCartao() {
-    return idCartao;
+  public Cartao getCartao() {
+    return cartao;
+  }
+
+  public void setCartao(Cartao cartao) {
+    this.cartao = cartao;
   }
 
   public EstadoProposta getEstado() {
@@ -81,10 +87,6 @@ public class Proposta {
 
   public void setEstado(EstadoProposta estado) {
     this.estado = estado;
-  }
-
-  public void setIdCartao(String idCartao) {
-    this.idCartao = idCartao;
   }
 
   @Override

@@ -1,12 +1,14 @@
 package br.com.zupacademy.ggwadera.proposta.proposta;
 
+import br.com.zupacademy.ggwadera.proposta.cartao.CartaoResponse;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
 public class PropostaResponse {
 
   private final UUID id;
-  private final String idCartao;
+  private final CartaoResponse cartao;
   private final String documento;
   private final String email;
   private final String nome;
@@ -16,7 +18,7 @@ public class PropostaResponse {
 
   public PropostaResponse(Proposta proposta) {
     this.id = proposta.getId();
-    this.idCartao = proposta.getIdCartao();
+    this.cartao = new CartaoResponse(proposta.getCartao());
     this.documento = proposta.getDocumento();
     this.email = proposta.getEmail();
     this.nome = proposta.getNome();
@@ -29,8 +31,8 @@ public class PropostaResponse {
     return id;
   }
 
-  public String getIdCartao() {
-    return idCartao;
+  public CartaoResponse getCartao() {
+    return cartao;
   }
 
   public String getDocumento() {
