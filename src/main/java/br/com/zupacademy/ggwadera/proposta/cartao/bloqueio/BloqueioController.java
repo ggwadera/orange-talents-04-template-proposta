@@ -1,8 +1,10 @@
 package br.com.zupacademy.ggwadera.proposta.cartao.bloqueio;
 
 import br.com.zupacademy.ggwadera.proposta.cartao.Cartao;
+import br.com.zupacademy.ggwadera.proposta.cartao.CartaoClient;
 import br.com.zupacademy.ggwadera.proposta.cartao.CartaoRepository;
 import br.com.zupacademy.ggwadera.proposta.util.error.ApiErrorException;
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +20,16 @@ public class BloqueioController {
 
   private final CartaoRepository cartaoRepository;
   private final BloqueioRepository bloqueioRepository;
+  private final CartaoClient cartaoClient;
 
   @Autowired
   public BloqueioController(
-      CartaoRepository cartaoRepository, BloqueioRepository bloqueioRepository) {
+      CartaoRepository cartaoRepository,
+      BloqueioRepository bloqueioRepository,
+      CartaoClient cartaoClient) {
     this.cartaoRepository = cartaoRepository;
     this.bloqueioRepository = bloqueioRepository;
+    this.cartaoClient = cartaoClient;
   }
 
   @PostMapping("/cartoes/{id}/bloqueio")
@@ -36,7 +42,17 @@ public class BloqueioController {
                 () ->
                     new ApiErrorException(
                         HttpStatus.NOT_FOUND, "Não foi encontrado um cartão com este id"));
-    if (!cartao.bloquear()) {
+    boolean cartaoFoiBloqueado;
+    try {
+      RespostaBloqueio response =
+          cartaoClient.bloqueioCartao(cartao.getId(), new SolicitacaoBloqueio());
+      cartaoFoiBloqueado = response.getResultado() == ResultadoBloqueio.BLOQUEADO;
+    } catch (FeignException e) {
+      cartaoFoiBloqueado = false;
+    } catch (Exception e) {
+      throw new ApiErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao processar requisição");
+    }
+    if (cartaoFoiBloqueado && !cartao.bloquear()) {
       throw new ApiErrorException(HttpStatus.UNPROCESSABLE_ENTITY, "Cartão já está bloqueado");
     }
     bloqueioRepository.save(
