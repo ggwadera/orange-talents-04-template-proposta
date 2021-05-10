@@ -10,9 +10,14 @@ public class Cartao {
 
   @Id private String id;
 
+  @Column(nullable = false)
   private LocalDateTime emitidoEm;
 
+  @Column(nullable = false)
   private String titular;
+
+  @Column(nullable = false)
+  private Boolean bloqueado = false;
 
   @OneToOne(mappedBy = "cartao", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Proposta proposta;
@@ -41,5 +46,10 @@ public class Cartao {
 
   public Proposta getProposta() {
     return proposta;
+  }
+
+  public Boolean bloquear() {
+    if (bloqueado) return false;
+    return bloqueado = true;
   }
 }
