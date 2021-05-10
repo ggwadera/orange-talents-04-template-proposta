@@ -17,7 +17,8 @@ public class Cartao {
   private String titular;
 
   @Column(nullable = false)
-  private Boolean bloqueado = false;
+  @Enumerated(EnumType.STRING)
+  private StatusCartao status;
 
   @OneToOne(mappedBy = "cartao", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Proposta proposta;
@@ -30,6 +31,7 @@ public class Cartao {
     this.emitidoEm = emitidoEm;
     this.titular = titular;
     this.proposta = proposta;
+    this.status = StatusCartao.ATIVO;
   }
 
   public String getId() {
@@ -49,7 +51,8 @@ public class Cartao {
   }
 
   public Boolean bloquear() {
-    if (bloqueado) return false;
-    return bloqueado = true;
+    if (status == StatusCartao.BLOQUEADO) return false;
+    status = StatusCartao.BLOQUEADO;
+    return true;
   }
 }
