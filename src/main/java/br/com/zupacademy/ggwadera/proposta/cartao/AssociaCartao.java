@@ -27,7 +27,7 @@ public class AssociaCartao {
     this.cartaoClient = cartaoClient;
   }
 
-  @Scheduled(fixedDelay = 5000)
+  @Scheduled(fixedDelay = 60000)
   @Transactional
   public void associarCartao() {
     logger.info("Verificando cartões para propostas");

@@ -18,7 +18,7 @@ public class PropostaResponse {
 
   public PropostaResponse(Proposta proposta) {
     this.id = proposta.getId();
-    this.cartao = new CartaoResponse(proposta.getCartao());
+    this.cartao = proposta.getCartao() != null ? new CartaoResponse(proposta.getCartao()) : null;
     this.documento = proposta.getDocumento();
     this.email = proposta.getEmail();
     this.nome = proposta.getNome();
