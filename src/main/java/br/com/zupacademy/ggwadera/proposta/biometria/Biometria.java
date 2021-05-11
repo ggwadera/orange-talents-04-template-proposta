@@ -13,7 +13,7 @@ public class Biometria {
   @Column(nullable = false)
   private byte[] fingerprint;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   private Cartao cartao;
 
   @Deprecated
