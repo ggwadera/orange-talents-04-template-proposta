@@ -12,6 +12,10 @@ public class ApiErrorException extends RuntimeException {
     this.reason = reason;
   }
 
+  public ApiErrorException(int status, String reason) {
+    this(HttpStatus.valueOf(status), reason);
+  }
+
   public HttpStatus getStatus() {
     return status;
   }

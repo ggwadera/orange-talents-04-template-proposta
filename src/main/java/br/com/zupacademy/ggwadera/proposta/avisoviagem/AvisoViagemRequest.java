@@ -12,22 +12,22 @@ public class AvisoViagemRequest {
 
   @NotBlank private final String destino;
 
-  @NotNull @Future private final LocalDate dataTermino;
+  @NotNull @Future private final LocalDate validoAte;
 
-  public AvisoViagemRequest(String destino, LocalDate dataTermino) {
+  public AvisoViagemRequest(String destino, LocalDate validoAte) {
     this.destino = destino;
-    this.dataTermino = dataTermino;
+    this.validoAte = validoAte;
   }
 
   public String getDestino() {
     return destino;
   }
 
-  public LocalDate getDataTermino() {
-    return dataTermino;
+  public LocalDate getValidoAte() {
+    return validoAte;
   }
 
   public AvisoViagem toModel(Cartao cartao, RequestInfo requestInfo) {
-    return new AvisoViagem(cartao, destino, dataTermino, requestInfo);
+    return new AvisoViagem(cartao, destino, validoAte, requestInfo);
   }
 }

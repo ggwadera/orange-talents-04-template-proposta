@@ -21,7 +21,7 @@ public class AvisoViagem {
   private String destino;
 
   @Column(nullable = false)
-  private LocalDate dataTermino;
+  private LocalDate validoAte;
 
   @CreationTimestamp
   @Column(nullable = false)
@@ -32,11 +32,10 @@ public class AvisoViagem {
   @Deprecated
   public AvisoViagem() {}
 
-  public AvisoViagem(
-      Cartao cartao, String destino, LocalDate dataTermino, RequestInfo requestInfo) {
+  public AvisoViagem(Cartao cartao, String destino, LocalDate validoAte, RequestInfo requestInfo) {
     this.cartao = cartao;
     this.destino = destino;
-    this.dataTermino = dataTermino;
+    this.validoAte = validoAte;
     this.requestInfo = requestInfo;
   }
 
@@ -52,8 +51,8 @@ public class AvisoViagem {
     return destino;
   }
 
-  public LocalDate getDataTermino() {
-    return dataTermino;
+  public LocalDate getValidoAte() {
+    return validoAte;
   }
 
   public LocalDateTime getCreatedAt() {
