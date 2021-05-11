@@ -1,9 +1,11 @@
 package br.com.zupacademy.ggwadera.proposta.avisoviagem;
 
 import br.com.zupacademy.ggwadera.proposta.cartao.Cartao;
+import br.com.zupacademy.ggwadera.proposta.cartao.CartaoClient;
 import br.com.zupacademy.ggwadera.proposta.cartao.CartaoRepository;
 import br.com.zupacademy.ggwadera.proposta.util.RequestInfo;
 import br.com.zupacademy.ggwadera.proposta.util.error.ApiErrorException;
+import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +26,16 @@ public class AvisoViagemController {
 
   private final AvisoViagemRepository avisoViagemRepository;
   private final CartaoRepository cartaoRepository;
+  private final CartaoClient cartaoClient;
 
   @Autowired
   public AvisoViagemController(
-      AvisoViagemRepository avisoViagemRepository, CartaoRepository cartaoRepository) {
+      AvisoViagemRepository avisoViagemRepository,
+      CartaoRepository cartaoRepository,
+      CartaoClient cartaoClient) {
     this.avisoViagemRepository = avisoViagemRepository;
     this.cartaoRepository = cartaoRepository;
+    this.cartaoClient = cartaoClient;
   }
 
   @PostMapping("/cartoes/{id}/viagem")
@@ -44,11 +50,16 @@ public class AvisoViagemController {
                 () ->
                     new ApiErrorException(
                         HttpStatus.NOT_FOUND, "Não foi encontrado um cartão com este id"));
+    try {
+      cartaoClient.avisoViagem(cartao.getId(), dto);
+    } catch (FeignException e) {
+      throw new ApiErrorException(e.status(), "falha ao processar aviso viagem");
+    }
     logger.info(
         "Novo aviso viagem, cartão={}, destino={}, dataTermino={}",
         cartao.getId(),
         dto.getDestino(),
-        dto.getDataTermino());
+        dto.getValidoAte());
     avisoViagemRepository.save(dto.toModel(cartao, new RequestInfo(request)));
     return ResponseEntity.ok().build();
   }
