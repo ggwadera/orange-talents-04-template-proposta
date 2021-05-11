@@ -3,6 +3,7 @@ package br.com.zupacademy.ggwadera.proposta.cartao.bloqueio;
 import br.com.zupacademy.ggwadera.proposta.cartao.Cartao;
 import br.com.zupacademy.ggwadera.proposta.cartao.CartaoClient;
 import br.com.zupacademy.ggwadera.proposta.cartao.CartaoRepository;
+import br.com.zupacademy.ggwadera.proposta.util.RequestInfo;
 import br.com.zupacademy.ggwadera.proposta.util.error.ApiErrorException;
 import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +56,7 @@ public class BloqueioController {
     if (cartaoFoiBloqueado && !cartao.bloquear()) {
       throw new ApiErrorException(HttpStatus.UNPROCESSABLE_ENTITY, "Cartão já está bloqueado");
     }
-    bloqueioRepository.save(
-        new Bloqueio(request.getRemoteAddr(), request.getHeader("User-Agent"), cartao));
+    bloqueioRepository.save(new Bloqueio(new RequestInfo(request), cartao));
     return ResponseEntity.ok().build();
   }
 }

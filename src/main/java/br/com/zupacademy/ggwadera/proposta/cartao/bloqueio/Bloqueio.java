@@ -1,6 +1,7 @@
 package br.com.zupacademy.ggwadera.proposta.cartao.bloqueio;
 
 import br.com.zupacademy.ggwadera.proposta.cartao.Cartao;
+import br.com.zupacademy.ggwadera.proposta.util.RequestInfo;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -15,11 +16,7 @@ public class Bloqueio {
   @CreationTimestamp
   private LocalDateTime createdAt;
 
-  @Column(nullable = false)
-  private String ip;
-
-  @Column(nullable = false)
-  private String userAgent;
+  @Embedded private RequestInfo requestInfo;
 
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Cartao cartao;
@@ -27,9 +24,8 @@ public class Bloqueio {
   @Deprecated
   public Bloqueio() {}
 
-  public Bloqueio(String ip, String userAgent, Cartao cartao) {
-    this.ip = ip;
-    this.userAgent = userAgent;
+  public Bloqueio(RequestInfo requestInfo, Cartao cartao) {
+    this.requestInfo = requestInfo;
     this.cartao = cartao;
   }
 
@@ -41,15 +37,11 @@ public class Bloqueio {
     return createdAt;
   }
 
-  public String getUserAgent() {
-    return userAgent;
-  }
-
-  public String getIp() {
-    return ip;
-  }
-
   public Cartao getCartao() {
     return cartao;
+  }
+
+  public RequestInfo getRequestInfo() {
+    return requestInfo;
   }
 }
