@@ -1,5 +1,6 @@
 package br.com.zupacademy.ggwadera.proposta.proposta;
 
+import br.com.zupacademy.ggwadera.proposta.metricas.Metricas;
 import br.com.zupacademy.ggwadera.proposta.proposta.avaliacao.AvaliacaoClient;
 import br.com.zupacademy.ggwadera.proposta.proposta.avaliacao.AvaliacaoRequest;
 import feign.FeignException;
@@ -26,12 +27,14 @@ public class PropostaController {
 
   private final PropostaRepository propostaRepository;
   private final AvaliacaoClient avaliacaoClient;
+  private final Metricas metricas;
 
   @Autowired
   public PropostaController(
-      PropostaRepository propostaRepository, AvaliacaoClient avaliacaoClient) {
+      PropostaRepository propostaRepository, AvaliacaoClient avaliacaoClient, Metricas metricas) {
     this.propostaRepository = propostaRepository;
     this.avaliacaoClient = avaliacaoClient;
+    this.metricas = metricas;
   }
 
   @InitBinder
@@ -70,6 +73,7 @@ public class PropostaController {
             .path("/{id}")
             .buildAndExpand(proposta.getId())
             .toUri();
+    metricas.incrementaCounterPropostaCriada();
     return ResponseEntity.created(location).build();
   }
 }
