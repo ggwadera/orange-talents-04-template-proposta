@@ -2,9 +2,8 @@ package br.com.zupacademy.ggwadera.proposta.biometria;
 
 import br.com.zupacademy.ggwadera.proposta.cartao.Cartao;
 import br.com.zupacademy.ggwadera.proposta.cartao.CartaoRepository;
-import br.com.zupacademy.ggwadera.proposta.util.error.ApiErrorException;
+import br.com.zupacademy.ggwadera.proposta.cartao.CartaoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,13 +32,7 @@ public class BiometriaController {
       @PathVariable String id,
       @RequestBody @Valid NovaBiometriaRequest request,
       UriComponentsBuilder builder) {
-    Cartao cartao =
-        cartaoRepository
-            .findById(id)
-            .orElseThrow(
-                () ->
-                    new ApiErrorException(
-                        HttpStatus.NOT_FOUND, "Não foi encontrado um cartão com este id"));
+    Cartao cartao = CartaoUtils.findByIdOrThrow(cartaoRepository, id);
     Biometria biometria = biometriaRepository.save(request.toModel(cartao));
     URI uri = builder.path("/biometrias/{id}").buildAndExpand(biometria.getId()).toUri();
     return ResponseEntity.created(uri).build();
