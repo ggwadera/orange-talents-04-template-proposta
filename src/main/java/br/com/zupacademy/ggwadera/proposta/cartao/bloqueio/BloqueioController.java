@@ -3,6 +3,7 @@ package br.com.zupacademy.ggwadera.proposta.cartao.bloqueio;
 import br.com.zupacademy.ggwadera.proposta.cartao.Cartao;
 import br.com.zupacademy.ggwadera.proposta.cartao.CartaoClient;
 import br.com.zupacademy.ggwadera.proposta.cartao.CartaoRepository;
+import br.com.zupacademy.ggwadera.proposta.cartao.CartaoUtils;
 import br.com.zupacademy.ggwadera.proposta.util.RequestInfo;
 import br.com.zupacademy.ggwadera.proposta.util.error.ApiErrorException;
 import feign.FeignException;
@@ -36,13 +37,7 @@ public class BloqueioController {
   @PostMapping("/cartoes/{id}/bloqueio")
   @Transactional
   public ResponseEntity<Void> bloqueiaCartao(@PathVariable String id, HttpServletRequest request) {
-    Cartao cartao =
-        cartaoRepository
-            .findById(id)
-            .orElseThrow(
-                () ->
-                    new ApiErrorException(
-                        HttpStatus.NOT_FOUND, "Não foi encontrado um cartão com este id"));
+    Cartao cartao = CartaoUtils.findByIdOrThrow(cartaoRepository, id);
     boolean cartaoFoiBloqueado;
     try {
       RespostaBloqueio response =
