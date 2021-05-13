@@ -11,8 +11,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
-        .anyRequest()
-        .authenticated()
+          .antMatchers("/actuator/prometheus").permitAll()
+          .anyRequest().authenticated()
         .and()
         .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
   }
