@@ -4,6 +4,7 @@ import br.com.zupacademy.ggwadera.proposta.metricas.Metricas;
 import br.com.zupacademy.ggwadera.proposta.proposta.avaliacao.AvaliacaoClient;
 import br.com.zupacademy.ggwadera.proposta.proposta.avaliacao.AvaliacaoRequest;
 import feign.FeignException;
+import io.opentracing.Tracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,18 @@ public class PropostaController {
   private final PropostaRepository propostaRepository;
   private final AvaliacaoClient avaliacaoClient;
   private final Metricas metricas;
+  private final Tracer tracer;
 
   @Autowired
   public PropostaController(
-      PropostaRepository propostaRepository, AvaliacaoClient avaliacaoClient, Metricas metricas) {
+      PropostaRepository propostaRepository,
+      AvaliacaoClient avaliacaoClient,
+      Metricas metricas,
+      Tracer tracer) {
     this.propostaRepository = propostaRepository;
     this.avaliacaoClient = avaliacaoClient;
     this.metricas = metricas;
+    this.tracer = tracer;
   }
 
   @InitBinder
@@ -57,6 +63,7 @@ public class PropostaController {
   @PostMapping
   @Transactional
   public ResponseEntity<Void> novaProposta(@RequestBody @Valid NovaPropostaRequest request) {
+    tracer.activeSpan().setTag("user.email", request.getEmail());
     final Proposta proposta = propostaRepository.save(request.toModel());
     try {
       avaliacaoClient.avaliacaoFinanceira(new AvaliacaoRequest(proposta));

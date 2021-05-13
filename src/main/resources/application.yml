@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: proposta
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/propostas}
     username: ${DB_USER:keycloak}
@@ -26,6 +28,15 @@ management:
     web:
       exposure:
         include: info, health, prometheus
+
+opentracing:
+  jaeger:
+    enabled: ${JAEGER_ENABLED:true}
+    service-name: ${spring.application.name}
+    http-sender:
+      url: ${JAEGER_ENDPOINT:http://localhost:14268/api/traces}
+    probabilistic-sampler:
+      sampling-rate: ${JAEGER_SAMPLER:1}
 
 servicos:
   analise: ${URL_ANALISE:http://localhost:9999/api}
