@@ -25,6 +25,8 @@ services:
   postgres:
     image: 'postgres:alpine'
     volumes:
+      - ./src/main/sql/postgresql.conf:/usr/share/postgresql/postgresql.conf
+      - ./src/main/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres-volume:/var/lib/postgresql/data
     ports:
       - 5432:5432
@@ -33,6 +35,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: keycloak
       POSTGRES_HOST: postgres
+    command: ["-c", "config_file=/usr/share/postgresql/postgresql.conf"]
 
   keycloak:
     image: jboss/keycloak

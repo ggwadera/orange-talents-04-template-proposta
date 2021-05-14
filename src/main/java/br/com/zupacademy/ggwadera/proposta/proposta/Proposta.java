@@ -1,6 +1,7 @@
 package br.com.zupacademy.ggwadera.proposta.proposta;
 
 import br.com.zupacademy.ggwadera.proposta.cartao.Cartao;
+import org.hibernate.annotations.ColumnTransformer;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -16,7 +17,11 @@ public class Proposta {
 
   @Id @GeneratedValue private UUID id;
 
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false, unique = true, columnDefinition = "bytea")
+  @ColumnTransformer(
+      read = "pgp_sym_decrypt(documento, current_setting('encrypt.key'))",
+      write = "pgp_sym_encrypt(?, current_setting('encrypt.key'))"
+  )
   private String documento;
 
   @Column(nullable = false, unique = true)
